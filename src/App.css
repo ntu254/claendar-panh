@@ -1,0 +1,495 @@
+/* Modern Schedule Calendar Styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+* {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #f5f5f5;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Improved Loading Animation */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Enhanced Calendar Customization */
+.ant-picker-calendar {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.ant-picker-calendar .ant-picker-panel {
+  background: white;
+}
+
+.ant-picker-calendar .ant-picker-calendar-header {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #fafbfc 0%, #f8fafc 100%);
+}
+
+.ant-picker-calendar .ant-picker-content th,
+.ant-picker-calendar .ant-picker-content td {
+  border-right: 1px solid #f5f5f5;
+  transition: all 0.2s ease;
+}
+
+.ant-picker-calendar .ant-picker-content thead th {
+  background: #fafafa;
+  font-weight: 600;
+  text-align: center;
+  padding: 16px 8px;
+  color: #666;
+  font-size: 13px;
+}
+
+.ant-picker-calendar .ant-picker-cell {
+  padding: 6px 8px;
+  min-height: 90px;
+  border-bottom: 1px solid #f5f5f5;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.ant-picker-calendar .ant-picker-cell:hover {
+  background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f4 100%);
+  transform: scale(1.02);
+  z-index: 1;
+}
+
+.ant-picker-calendar .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-calendar-date {
+  border: 2px solid #52c41a;
+  background: linear-gradient(135deg, #f6ffed 0%, #f0f9ff 100%);
+  border-radius: 6px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(82, 196, 26, 0.2);
+  animation: todayPulse 2s infinite;
+}
+
+@keyframes todayPulse {
+  0%, 100% { box-shadow: 0 2px 8px rgba(82, 196, 26, 0.2); }
+  50% { box-shadow: 0 4px 12px rgba(82, 196, 26, 0.4); }
+}
+
+/* Enhanced Badge Styles */
+.ant-badge-status-text {
+  font-size: 11px;
+  line-height: 16px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+  padding: 2px 0;
+}
+
+.ant-badge-status-dot {
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+}
+
+/* Enhanced Course Card Animations */
+.ant-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.ant-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+}
+
+.ant-card-body {
+  padding: 20px;
+}
+
+/* Improved Statistics Cards */
+.ant-statistic {
+  text-align: center;
+}
+
+.ant-statistic-content {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.ant-statistic-title {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+/* Enhanced Header */
+.gradient-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+}
+
+/* Better Button Styles */
+.ant-btn {
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.ant-btn-primary {
+  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+  border: none;
+}
+
+.ant-btn-primary:hover {
+  background: linear-gradient(135deg, #40a9ff 0%, #1890ff 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}
+
+/* Enhanced Responsive Design */
+@media (max-width: 1200px) {
+  .ant-layout-content {
+    padding: 16px !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .ant-layout-content {
+    padding: 12px !important;
+  }
+  
+  .ant-picker-calendar .ant-picker-cell {
+    min-height: 70px;
+    padding: 4px 6px;
+  }
+  
+  .ant-card-body {
+    padding: 16px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .ant-layout-header {
+    padding: 0 16px !important;
+  }
+  
+  .ant-layout-header .ant-typography {
+    font-size: 18px !important;
+  }
+  
+  .ant-row {
+    margin-left: -8px !important;
+    margin-right: -8px !important;
+  }
+  
+  .ant-col {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+  
+  .ant-picker-calendar .ant-picker-cell {
+    min-height: 60px;
+    padding: 2px 4px;
+  }
+  
+  .ant-badge-status-text {
+    font-size: 10px;
+    line-height: 14px;
+  }
+  
+  .ant-card-meta-title {
+    font-size: 14px !important;
+  }
+  
+  .ant-typography h4 {
+    font-size: 16px !important;
+  }
+  
+  .ant-statistic-content {
+    font-size: 20px !important;
+  }
+  
+  /* Hide some elements on mobile for better UX */
+  .mobile-hidden {
+    display: none !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .ant-layout-content {
+    padding: 8px !important;
+  }
+  
+  .ant-layout-header {
+    padding: 0 12px !important;
+  }
+  
+  .ant-layout-header .ant-typography {
+    font-size: 16px !important;
+  }
+  
+  .ant-picker-calendar .ant-picker-cell {
+    min-height: 50px;
+    padding: 1px 2px;
+  }
+  
+  .ant-card-body {
+    padding: 12px !important;
+  }
+  
+  .ant-statistic-content {
+    font-size: 18px !important;
+  }
+  
+  .ant-picker-calendar .ant-picker-calendar-header {
+    padding: 12px 16px;
+  }
+  
+  /* Stack layout on very small screens */
+  .mobile-stack {
+    flex-direction: column !important;
+  }
+  
+  .mobile-full-width {
+    width: 100% !important;
+  }
+}
+
+/* Enhanced Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #c1c1c1 0%, #a1a1a1 100%);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #a1a1a1 0%, #888 100%);
+}
+
+/* Subject-specific styling with better contrast */
+.course-physics { 
+  background: linear-gradient(135deg, #e6f7ff 0%, #f0f9ff 100%); 
+  border-left: 4px solid #1890ff; 
+}
+.course-biology { 
+  background: linear-gradient(135deg, #f6ffed 0%, #f0f9ff 100%); 
+  border-left: 4px solid #52c41a; 
+}
+.course-math { 
+  background: linear-gradient(135deg, #fff7e6 0%, #fef9f0 100%); 
+  border-left: 4px solid #fa8c16; 
+}
+.course-chemistry { 
+  background: linear-gradient(135deg, #fff1f0 0%, #fef7f6 100%); 
+  border-left: 4px solid #f5222d; 
+}
+.course-sports { 
+  background: linear-gradient(135deg, #f9f0ff 0%, #fef7ff 100%); 
+  border-left: 4px solid #722ed1; 
+}
+.course-medical { 
+  background: linear-gradient(135deg, #e6fffb 0%, #f0fdfc 100%); 
+  border-left: 4px solid #13c2c2; 
+}
+.course-philosophy { 
+  background: linear-gradient(135deg, #fff0f6 0%, #fef7f9 100%); 
+  border-left: 4px solid #eb2f96; 
+}
+
+/* Improved Today highlight with better animation */
+.today-highlight {
+  animation: todayGlow 3s ease-in-out infinite;
+}
+
+@keyframes todayGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(82, 196, 26, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(82, 196, 26, 0.1);
+  }
+}
+
+/* Enhanced transitions and micro-interactions */
+.ant-layout, .ant-card, .ant-btn, .ant-input, .ant-select {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Better focus states with accessibility */
+.ant-btn:focus, .ant-input:focus, .ant-select:focus {
+  box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.2);
+  outline: none;
+  border-color: #40a9ff;
+}
+
+/* Loading state improvements */
+.ant-spin-container {
+  transition: opacity 0.3s ease;
+}
+
+.ant-spin-blur {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Enhanced hover states */
+.ant-card:hover .ant-card-meta-title {
+  color: #1890ff;
+}
+
+/* Better spacing for content */
+.content-spacing {
+  margin-bottom: 24px;
+}
+
+.content-spacing:last-child {
+  margin-bottom: 0;
+}
+
+/* Improved tag styling */
+.ant-tag {
+  border-radius: 6px;
+  font-weight: 500;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.ant-tag:hover {
+  transform: scale(1.05);
+}
+
+/* Enhanced modal and drawer styles */
+.ant-modal-content {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.ant-drawer-content {
+  border-radius: 12px 0 0 12px;
+}
+
+/* Print styles for better UX */
+@media print {
+  body {
+    background: white !important;
+  }
+  
+  .no-print, .ant-btn, .ant-input {
+    display: none !important;
+  }
+  
+  .ant-card {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+  }
+}
+
+/* Dark Theme Support */
+.dark-theme {
+  background-color: #000000;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.dark-theme .ant-layout {
+  background-color: #000000;
+}
+
+.dark-theme .ant-card {
+  background-color: #1f1f1f;
+  border-color: #434343;
+}
+
+.dark-theme .ant-picker-calendar {
+  background-color: #1f1f1f;
+  border-color: #434343;
+}
+
+.dark-theme .ant-picker-calendar .ant-picker-calendar-header {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border-bottom-color: #434343;
+}
+
+.dark-theme .ant-picker-cell-inner {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.dark-theme .ant-picker-cell:hover .ant-picker-cell-inner {
+  background-color: #2d2d2d;
+}
+
+.dark-theme .ant-picker-cell-today .ant-picker-cell-inner {
+  background-color: #1f1f1f;
+  border-color: #1890ff;
+}
+
+.dark-theme .course-card {
+  background: linear-gradient(135deg, #2d2d2d 0%, #404040 100%);
+  border-color: #434343;
+}
+
+.dark-theme .course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+}
+
+.dark-theme .statistic-card {
+  background: linear-gradient(135deg, #1f1f1f 0%, #2d2d2d 100%);
+  border-color: #434343;
+}
+
+.dark-theme .search-filter-card {
+  background-color: #1f1f1f;
+  border-color: #434343;
+}
+
+/* Transition effects for theme switching */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Custom scrollbar for dark theme */
+.dark-theme ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dark-theme ::-webkit-scrollbar-track {
+  background: #1f1f1f;
+}
+
+.dark-theme ::-webkit-scrollbar-thumb {
+  background: #434343;
+  border-radius: 4px;
+}
+
+.dark-theme ::-webkit-scrollbar-thumb:hover {
+  background: #555555;
+}
