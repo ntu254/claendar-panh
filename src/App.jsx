@@ -329,50 +329,6 @@ function App() {
             />
           </div>
 
-          {/* Statistics Cards */}
-          <Row gutter={[16, 16]} className="content-spacing">
-            <Col xs={24} sm={6}>
-              <Card hoverable>
-                <Statistic
-                  title="Môn học"
-                  value={stats.uniqueSubjects}
-                  prefix={<BookOutlined />}
-                  valueStyle={{ color: '#3f8600' }}
-                />
-              </Card>
-            </Col>
-            <Col xs={24} sm={6}>
-              <Card hoverable>
-                <Statistic
-                  title="Tổng buổi học"
-                  value={stats.totalClasses}
-                  prefix={<CalendarOutlined />}
-                  valueStyle={{ color: '#1890ff' }}
-                />
-              </Card>
-            </Col>
-            <Col xs={24} sm={6}>
-              <Card hoverable>
-                <Statistic
-                  title="Hôm nay"
-                  value={stats.todayClasses}
-                  prefix={<FireOutlined />}
-                  valueStyle={{ color: '#cf1322' }}
-                />
-              </Card>
-            </Col>
-            <Col xs={24} sm={6}>
-              <Card hoverable>
-                <Statistic
-                  title="Tuần này"
-                  value={stats.thisWeekClasses}
-                  prefix={<ClockCircleOutlined />}
-                  valueStyle={{ color: '#722ed1' }}
-                />
-              </Card>
-            </Col>
-          </Row>
-
           <Row gutter={[24, 24]}>
             {/* Main Calendar */}
             <Col xs={24} lg={16}>
