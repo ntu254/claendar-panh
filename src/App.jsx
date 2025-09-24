@@ -11,8 +11,7 @@ import {
   BackTop,
   FloatButton,
   Alert,
-  Tabs,
-  Grid
+  Tabs
 } from 'antd';
 import { 
   CalendarOutlined, 
@@ -36,7 +35,6 @@ import './App.css';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
-const { useBreakpoint } = Grid;
 
 // Set Vietnamese locale
 dayjs.locale('vi');
@@ -52,8 +50,7 @@ function App() {
   const [viewMode, setViewMode] = useState('calendar'); // 'calendar' | 'list'
   
   const { isDarkMode } = useTheme();
-  const screens = useBreakpoint();
-  const mainGutter = screens.xl ? [24, 24] : screens.md ? [16, 16] : [12, 12];
+  const mainGutter = [24, 24];
 
   // Load schedule data with better error handling
   useEffect(() => {
