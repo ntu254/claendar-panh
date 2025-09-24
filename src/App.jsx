@@ -9,7 +9,10 @@ import {
   Space, 
   message,
   BackTop,
-  FloatButton
+  FloatButton,
+  Alert,
+  Tabs,
+  Grid
 } from 'antd';
 import { 
   CalendarOutlined, 
@@ -33,6 +36,7 @@ import './App.css';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
+const { useBreakpoint } = Grid;
 
 // Set Vietnamese locale
 dayjs.locale('vi');
@@ -45,8 +49,11 @@ function App() {
   const [searchLoading, setSearchLoading] = useState(false);
   const [themeSettingsOpen, setThemeSettingsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(dayjs());
+  const [viewMode, setViewMode] = useState('calendar'); // 'calendar' | 'list'
   
   const { isDarkMode } = useTheme();
+  const screens = useBreakpoint();
+  const mainGutter = screens.xl ? [24, 24] : screens.md ? [16, 16] : [12, 12];
 
   // Load schedule data with better error handling
   useEffect(() => {
@@ -278,16 +285,22 @@ function App() {
   const stats = getStatistics();
   const uniqueSubjects = getUniqueSubjects();
 
+  // Sorted list for "list" view
+  const sortedCourses = [...filteredData].sort((a, b) => {
+    const dateA = dayjs(`${a.year}-${a.month}-${a.day} ${a.startTime}`);
+    const dateB = dayjs(`${b.year}-${b.month}-${b.day} ${b.startTime}`);
+    return dateA.diff(dateB);
+  });
+
   return (
     <Layout style={{ 
       background: isDarkMode ? '#000000' : '#f5f5f5', 
       minHeight: '100vh',
       transition: 'all 0.3s ease'
     }}>
-      <Header style={{ 
+      <Header className="animated-header" style={{ 
         background: isDarkMode 
-          ? 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)'
-          : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          ? 'linear-gradient(135deg, #2c3e50 0%, #34495egradient(135deg, #667eea 0%, #764ba2 100%)',
         padding: '0 24px',
         display: 'flex',
         alignItems: 'center',
@@ -298,11 +311,16 @@ function App() {
         zIndex: 1000,
         transition: 'all 0.3s ease'
       }}>
-        <Space align="center">
-          <CalendarOutlined style={{ fontSize: '24px', color: 'white' }} />
-          <Title level={2} style={{ color: 'white', margin: 0 }}>
-            Lịch Khóa Biểu
-          </Title>
+        <Space align="center" className="mobile-stack">
+          <CalendarOutlined style={{ fontSize: '26px', color: 'white' }} />
+          <div>
+            <Title level={2} style={{ color: 'white', margin: 0 }}>
+              Lịch Khóa Biểu
+            </Title>
+            <Typography.Text style={{ color: 'rgba(255,255,255,0.85)' }}>
+              Đẹp, dễ hiểu và phản hồi tốt trên mọi thiết bị
+            </Typography.Text>
+          </div>
         </Space>
         
         <FloatButton
@@ -313,7 +331,7 @@ function App() {
             background: 'rgba(255, 255, 255, 0.2)',
             border: '1px solid rgba(255, 255, 255, 0.3)'
           }}
-          tooltip="Theme Settings"
+          tooltip="Tùy chỉnh giao diện"
         />
       </Header>
 
@@ -337,7 +355,7 @@ function App() {
                 selectedDate={selectedDate}
                 onDateSelect={setSelectedDate}
               />
-            </Col>
+            </div>
 
             {/* Sidebar with today's and upcoming courses */}
             <Col xs={24} lg={8}>
@@ -393,9 +411,117 @@ function App() {
                     />
                   )}
                 </Card>
-              </Space>
-            </Col>
-          </Row>
+              </Col>
+            </Row>
+
+            {/* View mode switch */}
+            <div className="content-spacing">
+              <Tabs 
+                activeKey={viewMode} 
+                onChange={setViewMode}
+                items={[
+                  { key: 'calendar', label: 'Xem theo Lịch' },
+                  { key: 'list', label: 'Xem theo Danh sách' }
+                ]}
+              />
+            </div>
+
+            {viewMode === 'calendar' ? (
+              <Row gutter={mainGutter}>
+                {/* Main Calendar */}
+                <Col xs={24} lg={16}>
+                  <ScheduleCalendar 
+                    data={filteredData} 
+                    selectedDate={selectedDate}
+                    onDateSelect={setSelectedDate}
+                  />
+                </Col>
+
+                {/* Sidebar with today's and upcoming courses */}
+                <Col xs={24} lg={8}>
+                  <Space direction="vertical" style={{ width: '100%' }} size="large">
+                    {/* Today's Courses */}
+                    <Card
+                      className="glass-card"
+                      title={
+                        <Space>
+                          <FireOutlined style={{ color: '#52c41a' }} />
+                          <Title level={4} style={{ margin: 0 }}>
+                            Hôm nay ({dayjs().format('DD/MM/YYYY')})
+                          </Title>
+                        </Space>
+                      }
+                      style={{ borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                      loading={searchLoading}
+                    >
+                      {todayCourses.length > 0 ? (
+                        <Space direction="vertical" style={{ width: '100%' }} size="middle">
+                          {todayCourses.map((course, index) => (
+                            <CourseCard key={index} course={course} />
+                          ))}
+                        </Space>
+                      ) : (
+                        <EmptyState
+                          type="no-classes-today"
+                        />
+                      )}
+                    </Card>
+
+                    {/* Upcoming Courses */}
+                    <Card
+                      className="glass-card"
+                      title={
+                        <Space>
+                          <ClockCircleOutlined style={{ color: '#1890ff' }} />
+                          <Title level={4} style={{ margin: 0 }}>
+                            Sắp tới
+                          </Title>
+                        </Space>
+                      }
+                      style={{ borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                      loading={searchLoading}
+                    >
+                      {upcomingCourses.length > 0 ? (
+                        <Space direction="vertical" style={{ width: '100%' }} size="middle">
+                          {upcomingCourses.map((course, index) => (
+                            <CourseCard key={index} course={course} showDate={true} />
+                          ))}
+                        </Space>
+                      ) : (
+                        <EmptyState
+                          type="no-upcoming"
+                        />
+                      )}
+                    </Card>
+                  </Space>
+                </Col>
+              </Row>
+            ) : (
+              <Row gutter={mainGutter}>
+                <Col xs={24}>
+                  <Card 
+                    className="glass-card"
+                    title={
+                      <Space>
+                        <BookOutlined />
+                        <Title level={4} style={{ margin: 0 }}>Danh sách môn học</Title>
+                      </Space>
+                    }
+                  >
+                    {sortedCourses.length > 0 ? (
+                      <Space direction="vertical" style={{ width: '100%' }} size="middle">
+                        {sortedCourses.map((course, index) => (
+                          <CourseCard key={index} course={course} showDate />
+                        ))}
+                      </Space>
+                    ) : (
+                      <EmptyState type="no-classes" title="Không có kết quả" description="Hãy điều chỉnh bộ lọc để xem thêm môn học." />
+                    )}
+                  </Card>
+                </Col>
+              </Row>
+            )}
+          </div>
         </Content>
 
         {/* Float Buttons for additional features */}
@@ -426,6 +552,14 @@ function App() {
           onClose={() => setThemeSettingsOpen(false)}
         />
       </Layout>
+      <Layout.Footer style={{ 
+        textAlign: 'center', 
+        background: 'transparent', 
+        marginTop: 12,
+        color: isDarkMode ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.45)'
+      }}>
+        Mẹo nhỏ: Dùng bộ lọc để tìm nhanh môn học, hoặc mở Tùy chỉnh giao diện để chọn màu bạn thích.
+      </Layout.Footer>
   );
 }
 
