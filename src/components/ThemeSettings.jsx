@@ -33,12 +33,7 @@ const ThemeSettings = ({ open, onClose }) => {
     { name: 'Red', value: '#f5222d', desc: 'Energy Red' },
     { name: 'Pink', value: '#eb2f96', desc: 'Vibrant Pink' },
     { name: 'Cyan', value: '#13c2c2', desc: 'Ocean Cyan' },
-    { name: 'Geek Blue', value: '#2f54eb', desc: 'Tech Blue' },
-    // Cute pastel presets
-    { name: 'Pastel Pink', value: '#ff85c0', desc: 'Cute Pastel Pink' },
-    { name: 'Pastel Purple', value: '#b37feb', desc: 'Soft Lavender' },
-    { name: 'Mint', value: '#73d13d', desc: 'Fresh Mint' },
-    { name: 'Peach', value: '#ffa940', desc: 'Sweet Peach' }
+    { name: 'Geek Blue', value: '#2f54eb', desc: 'Tech Blue' }
   ];
 
   return (
@@ -46,7 +41,7 @@ const ThemeSettings = ({ open, onClose }) => {
       title={
         <Space>
           <BgColorsOutlined />
-          <Text strong>Tùy chỉnh giao diện</Text>
+          <Text strong>Theme Settings</Text>
         </Space>
       }
       placement="right"
