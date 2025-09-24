@@ -5,12 +5,10 @@ import {
   Row, 
   Col, 
   Card, 
-  Statistic, 
   Space, 
   message,
   BackTop,
   FloatButton,
-  Alert,
   Tabs
 } from 'antd';
 import { 
@@ -297,7 +295,8 @@ function App() {
     }}>
       <Header className="animated-header" style={{ 
         background: isDarkMode 
-          ? 'linear-gradient(135deg, #2c3e50 0%, #34495egradient(135deg, #667eea 0%, #764ba2 100%)',
+          ? 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)'
+          : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         padding: '0 24px',
         display: 'flex',
         alignItems: 'center',
@@ -332,19 +331,68 @@ function App() {
         />
       </Header>
 
-        <Content style={{ padding: '24px' }}>
-          {/* Search and Filter */}
-          <div className="content-spacing">
-            <SearchAndFilter
-              onSearch={handleSearch}
-              onFilter={handleFilter}
-              onClear={handleClearFilters}
-              subjects={uniqueSubjects}
-              loading={searchLoading}
-            />
-          </div>
+      <Content style={{ padding: '24px' }}>
+        {/* Search and Filter */}
+        <div className="content-spacing">
+          <SearchAndFilter
+            onSearch={handleSearch}
+            onFilter={handleFilter}
+            onClear={handleClearFilters}
+            subjects={uniqueSubjects}
+            loading={searchLoading}
+          />
+        </div>
 
-          <Row gutter={[24, 24]}>
+        {/* Cute statistics cards */}
+        <Row gutter={[16, 16]} className="content-spacing">
+          <Col xs={12} sm={6}>
+            <Card className="glass-card statistic-card" hoverable>
+              <Space direction="vertical" align="center" style={{ width: '100%' }}>
+                <Title level={5} style={{ margin: 0 }}>Môn học</Title>
+                <Typography.Text strong style={{ fontSize: 22 }}>{stats.uniqueSubjects}</Typography.Text>
+              </Space>
+            </Card>
+          </Col>
+          <Col xs={12} sm={6}>
+            <Card className="glass-card statistic-card" hoverable>
+              <Space direction="vertical" align="center" style={{ width: '100%' }}>
+                <Title level={5} style={{ margin: 0 }}>Tổng tiết</Title>
+                <Typography.Text strong style={{ fontSize: 22 }}>{stats.totalClasses}</Typography.Text>
+              </Space>
+            </Card>
+          </Col>
+          <Col xs={12} sm={6}>
+            <Card className="glass-card statistic-card" hoverable>
+              <Space direction="vertical" align="center" style={{ width: '100%' }}>
+                <Title level={5} style={{ margin: 0 }}>Hôm nay</Title>
+                <Typography.Text strong style={{ fontSize: 22 }}>{stats.todayClasses}</Typography.Text>
+              </Space>
+            </Card>
+          </Col>
+          <Col xs={12} sm={6}>
+            <Card className="glass-card statistic-card" hoverable>
+              <Space direction="vertical" align="center" style={{ width: '100%' }}>
+                <Title level={5} style={{ margin: 0 }}>Tuần này</Title>
+                <Typography.Text strong style={{ fontSize: 22 }}>{stats.thisWeekClasses}</Typography.Text>
+              </Space>
+            </Card>
+          </Col>
+        </Row>
+
+        {/* View mode switch */}
+        <div className="content-spacing">
+          <Tabs 
+            activeKey={viewMode} 
+            onChange={setViewMode}
+            items={[
+              { key: 'calendar', label: 'Xem theo Lịch' },
+              { key: 'list', label: 'Xem theo Danh sách' }
+            ]}
+          />
+        </div>
+
+        {viewMode === 'calendar' ? (
+          <Row gutter={mainGutter}>
             {/* Main Calendar */}
             <Col xs={24} lg={16}>
               <ScheduleCalendar 
@@ -352,13 +400,14 @@ function App() {
                 selectedDate={selectedDate}
                 onDateSelect={setSelectedDate}
               />
-            </div>
+            </Col>
 
             {/* Sidebar with today's and upcoming courses */}
             <Col xs={24} lg={8}>
               <Space direction="vertical" style={{ width: '100%' }} size="large">
                 {/* Today's Courses */}
                 <Card
+                  className="glass-card"
                   title={
                     <Space>
                       <FireOutlined style={{ color: '#52c41a' }} />
@@ -385,6 +434,7 @@ function App() {
 
                 {/* Upcoming Courses */}
                 <Card
+                  className="glass-card"
                   title={
                     <Space>
                       <ClockCircleOutlined style={{ color: '#1890ff' }} />
@@ -408,147 +458,63 @@ function App() {
                     />
                   )}
                 </Card>
-              </Col>
-            </Row>
-
-            {/* View mode switch */}
-            <div className="content-spacing">
-              <Tabs 
-                activeKey={viewMode} 
-                onChange={setViewMode}
-                items={[
-                  { key: 'calendar', label: 'Xem theo Lịch' },
-                  { key: 'list', label: 'Xem theo Danh sách' }
-                ]}
-              />
-            </div>
-
-            {viewMode === 'calendar' ? (
-              <Row gutter={mainGutter}>
-                {/* Main Calendar */}
-                <Col xs={24} lg={16}>
-                  <ScheduleCalendar 
-                    data={filteredData} 
-                    selectedDate={selectedDate}
-                    onDateSelect={setSelectedDate}
-                  />
-                </Col>
-
-                {/* Sidebar with today's and upcoming courses */}
-                <Col xs={24} lg={8}>
-                  <Space direction="vertical" style={{ width: '100%' }} size="large">
-                    {/* Today's Courses */}
-                    <Card
-                      className="glass-card"
-                      title={
-                        <Space>
-                          <FireOutlined style={{ color: '#52c41a' }} />
-                          <Title level={4} style={{ margin: 0 }}>
-                            Hôm nay ({dayjs().format('DD/MM/YYYY')})
-                          </Title>
-                        </Space>
-                      }
-                      style={{ borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                      loading={searchLoading}
-                    >
-                      {todayCourses.length > 0 ? (
-                        <Space direction="vertical" style={{ width: '100%' }} size="middle">
-                          {todayCourses.map((course, index) => (
-                            <CourseCard key={index} course={course} />
-                          ))}
-                        </Space>
-                      ) : (
-                        <EmptyState
-                          type="no-classes-today"
-                        />
-                      )}
-                    </Card>
-
-                    {/* Upcoming Courses */}
-                    <Card
-                      className="glass-card"
-                      title={
-                        <Space>
-                          <ClockCircleOutlined style={{ color: '#1890ff' }} />
-                          <Title level={4} style={{ margin: 0 }}>
-                            Sắp tới
-                          </Title>
-                        </Space>
-                      }
-                      style={{ borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                      loading={searchLoading}
-                    >
-                      {upcomingCourses.length > 0 ? (
-                        <Space direction="vertical" style={{ width: '100%' }} size="middle">
-                          {upcomingCourses.map((course, index) => (
-                            <CourseCard key={index} course={course} showDate={true} />
-                          ))}
-                        </Space>
-                      ) : (
-                        <EmptyState
-                          type="no-upcoming"
-                        />
-                      )}
-                    </Card>
+              </Space>
+            </Col>
+          </Row>
+        ) : (
+          <Row gutter={mainGutter}>
+            <Col xs={24}>
+              <Card 
+                className="glass-card"
+                title={
+                  <Space>
+                    <BookOutlined />
+                    <Title level={4} style={{ margin: 0 }}>Danh sách môn học</Title>
                   </Space>
-                </Col>
-              </Row>
-            ) : (
-              <Row gutter={mainGutter}>
-                <Col xs={24}>
-                  <Card 
-                    className="glass-card"
-                    title={
-                      <Space>
-                        <BookOutlined />
-                        <Title level={4} style={{ margin: 0 }}>Danh sách môn học</Title>
-                      </Space>
-                    }
-                  >
-                    {sortedCourses.length > 0 ? (
-                      <Space direction="vertical" style={{ width: '100%' }} size="middle">
-                        {sortedCourses.map((course, index) => (
-                          <CourseCard key={index} course={course} showDate />
-                        ))}
-                      </Space>
-                    ) : (
-                      <EmptyState type="no-classes" title="Không có kết quả" description="Hãy điều chỉnh bộ lọc để xem thêm môn học." />
-                    )}
-                  </Card>
-                </Col>
-              </Row>
-            )}
-          </div>
-        </Content>
+                }
+              >
+                {sortedCourses.length > 0 ? (
+                  <Space direction="vertical" style={{ width: '100%' }} size="middle">
+                    {sortedCourses.map((course, index) => (
+                      <CourseCard key={index} course={course} showDate />
+                    ))}
+                  </Space>
+                ) : (
+                  <EmptyState type="no-classes" title="Không có kết quả" description="Hãy điều chỉnh bộ lọc để xem thêm môn học." />
+                )}
+              </Card>
+            </Col>
+          </Row>
+        )}
+      </Content>
 
-        {/* Float Buttons for additional features */}
-        <FloatButton.Group
-          trigger="hover"
-          type="primary"
-          style={{ right: 24 }}
-          icon={<SettingOutlined />}
-        >
-          <FloatButton 
-            icon={<QuestionCircleOutlined />} 
-            tooltip="Hướng dẫn sử dụng"
-            onClick={() => message.info('Tính năng hướng dẫn sẽ có trong phiên bản tiếp theo')}
-          />
-          <FloatButton 
-            icon={<CalendarOutlined />} 
-            tooltip="Xuất lịch"
-            onClick={() => message.info('Tính năng xuất lịch sẽ có trong phiên bản tiếp theo')}
-          />
-        </FloatButton.Group>
-
-        {/* Back to top */}
-        <BackTop style={{ right: 24, bottom: 24 }} />
-        
-        {/* Theme Settings */}
-        <ThemeSettings 
-          open={themeSettingsOpen}
-          onClose={() => setThemeSettingsOpen(false)}
+      {/* Float Buttons for additional features */}
+      <FloatButton.Group
+        trigger="hover"
+        type="primary"
+        style={{ right: 24 }}
+        icon={<SettingOutlined />}
+      >
+        <FloatButton 
+          icon={<QuestionCircleOutlined />} 
+          tooltip="Hướng dẫn sử dụng"
+          onClick={() => message.info('Tính năng hướng dẫn sẽ có trong phiên bản tiếp theo')}
         />
-      </Layout>
+        <FloatButton 
+          icon={<CalendarOutlined />} 
+          tooltip="Xuất lịch"
+          onClick={() => message.info('Tính năng xuất lịch sẽ có trong phiên bản tiếp theo')}
+        />
+      </FloatButton.Group>
+
+      {/* Back to top */}
+      <BackTop style={{ right: 24, bottom: 24 }} />
+      
+      {/* Theme Settings */}
+      <ThemeSettings 
+        open={themeSettingsOpen}
+        onClose={() => setThemeSettingsOpen(false)}
+      />
       <Layout.Footer style={{ 
         textAlign: 'center', 
         background: 'transparent', 
@@ -557,6 +523,7 @@ function App() {
       }}>
         Mẹo nhỏ: Dùng bộ lọc để tìm nhanh môn học, hoặc mở Tùy chỉnh giao diện để chọn màu bạn thích.
       </Layout.Footer>
+    </Layout>
   );
 }
 
