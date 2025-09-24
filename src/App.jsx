@@ -9,7 +9,10 @@ import {
   Space, 
   message,
   BackTop,
-  FloatButton
+  FloatButton,
+  Alert,
+  Tabs,
+  Grid
 } from 'antd';
 import { 
   CalendarOutlined, 
@@ -33,6 +36,7 @@ import './App.css';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
+const { useBreakpoint } = Grid;
 
 // Set Vietnamese locale
 dayjs.locale('vi');
@@ -45,8 +49,11 @@ function App() {
   const [searchLoading, setSearchLoading] = useState(false);
   const [themeSettingsOpen, setThemeSettingsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(dayjs());
+  const [viewMode, setViewMode] = useState('calendar'); // 'calendar' | 'list'
   
   const { isDarkMode } = useTheme();
+  const screens = useBreakpoint();
+  const mainGutter = screens.xl ? [24, 24] : screens.md ? [16, 16] : [12, 12];
 
   // Load schedule data with better error handling
   useEffect(() => {
@@ -278,6 +285,13 @@ function App() {
   const stats = getStatistics();
   const uniqueSubjects = getUniqueSubjects();
 
+  // Sorted list for "list" view
+  const sortedCourses = [...filteredData].sort((a, b) => {
+    const dateA = dayjs(`${a.year}-${a.month}-${a.day} ${a.startTime}`);
+    const dateB = dayjs(`${b.year}-${b.month}-${b.day} ${b.startTime}`);
+    return dateA.diff(dateB);
+  });
+
   return (
     <Layout style={{ 
       background: isDarkMode ? '#000000' : '#f5f5f5', 
@@ -323,100 +337,195 @@ function App() {
       </Header>
 
         <Content style={{ padding: '24px' }}>
-          {/* Hero Banner */}
-          <div className="hero-banner content-spacing">
-            <div className="hero-content">
-              <Title level={3} style={{ margin: 0 }}>
-                Chào bạn! Đây là lịch học của bạn.
-              </Title>
-              <Typography.Text style={{ display: 'block', marginTop: 6 }}>
-                Dễ nhìn, đáng yêu, và phản hồi tốt trên mọi thiết bị. Dùng bộ lọc phía dưới để tìm nhanh.
-              </Typography.Text>
+          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+            {/* Hero Banner */}
+            <div className="hero-banner content-spacing">
+              <div className="hero-content">
+                <Title level={3} style={{ margin: 0 }}>
+                  Chào bạn! Đây là lịch học của bạn.
+                </Title>
+                <Typography.Text style={{ display: 'block', marginTop: 6 }}>
+                  Dễ nhìn, đáng yêu, và phản hồi tốt trên mọi thiết bị. Dùng bộ lọc phía dưới để tìm nhanh.
+                </Typography.Text>
+              </div>
+              <div className="hero-art" aria-hidden="true" />
             </div>
-            <div className="hero-art" aria-hidden="true" />
-          </div>
 
-          {/* Search and Filter */}
-          <div className="content-spacing">
-            <SearchAndFilter
-              onSearch={handleSearch}
-              onFilter={handleFilter}
-              onClear={handleClearFilters}
-              subjects={uniqueSubjects}
-              loading={searchLoading}
-            />
-          </div>
-
-
-          <Row gutter={[24, 24]}>
-            {/* Main Calendar */}
-            <Col xs={24} lg={16}>
-              <ScheduleCalendar 
-                data={filteredData} 
-                selectedDate={selectedDate}
-                onDateSelect={setSelectedDate}
+            {/* Helpful tip */}
+            <div className="content-spacing">
+              <Alert 
+                message="Mẹo nhỏ" 
+                description="Bạn có thể chuyển chế độ xem giữa Lịch và Danh sách để thuận tiện trên điện thoại."
+                type="info" 
+                showIcon 
+                closable 
+                style={{ borderRadius: 12 }}
               />
-            </Col>
+            </div>
 
-            {/* Sidebar with today's and upcoming courses */}
-            <Col xs={24} lg={8}>
-              <Space direction="vertical" style={{ width: '100%' }} size="large">
-                {/* Today's Courses */}
-                <Card
-                  className="glass-card"
-                  title={
-                    <Space>
-                      <FireOutlined style={{ color: '#52c41a' }} />
-                      <Title level={4} style={{ margin: 0 }}>
-                        Hôm nay ({dayjs().format('DD/MM/YYYY')})
-                      </Title>
-                    </Space>
-                  }
-                  style={{ borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                  loading={searchLoading}
-                >
-                  {todayCourses.length > 0 ? (
-                    <Space direction="vertical" style={{ width: '100%' }} size="middle">
-                      {todayCourses.map((course, index) => (
-                        <CourseCard key={index} course={course} />
-                      ))}
-                    </Space>
-                  ) : (
-                    <EmptyState
-                      type="no-classes-today"
-                    />
-                  )}
-                </Card>
+            {/* Search and Filter */}
+            <div className="content-spacing">
+              <SearchAndFilter
+                onSearch={handleSearch}
+                onFilter={handleFilter}
+                onClear={handleClearFilters}
+                subjects={uniqueSubjects}
+                loading={searchLoading}
+              />
+            </div>
 
-                {/* Upcoming Courses */}
-                <Card
-                  className="glass-card"
-                  title={
-                    <Space>
-                      <ClockCircleOutlined style={{ color: '#1890ff' }} />
-                      <Title level={4} style={{ margin: 0 }}>
-                        Sắp tới
-                      </Title>
-                    </Space>
-                  }
-                  style={{ borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                  loading={searchLoading}
-                >
-                  {upcomingCourses.length > 0 ? (
-                    <Space direction="vertical" style={{ width: '100%' }} size="middle">
-                      {upcomingCourses.map((course, index) => (
-                        <CourseCard key={index} course={course} showDate={true} />
-                      ))}
-                    </Space>
-                  ) : (
-                    <EmptyState
-                      type="no-upcoming"
-                    />
-                  )}
+            {/* Statistics Cards */}
+            <Row gutter={mainGutter} className="content-spacing">
+              <Col xs={24} sm={6}>
+                <Card hoverable className="statistic-card">
+                  <Statistic
+                    title="Môn học"
+                    value={stats.uniqueSubjects}
+                    prefix={<BookOutlined />}
+                    valueStyle={{ color: '#3f8600' }}
+                  />
                 </Card>
-              </Space>
-            </Col>
-          </Row>
+              </Col>
+              <Col xs={24} sm={6}>
+                <Card hoverable className="statistic-card">
+                  <Statistic
+                    title="Tổng buổi học"
+                    value={stats.totalClasses}
+                    prefix={<CalendarOutlined />}
+                    valueStyle={{ color: '#1890ff' }}
+                  />
+                </Card>
+              </Col>
+              <Col xs={24} sm={6}>
+                <Card hoverable className="statistic-card">
+                  <Statistic
+                    title="Hôm nay"
+                    value={stats.todayClasses}
+                    prefix={<FireOutlined />}
+                    valueStyle={{ color: '#cf1322' }}
+                  />
+                </Card>
+              </Col>
+              <Col xs={24} sm={6}>
+                <Card hoverable className="statistic-card">
+                  <Statistic
+                    title="Tuần này"
+                    value={stats.thisWeekClasses}
+                    prefix={<ClockCircleOutlined />}
+                    valueStyle={{ color: '#722ed1' }}
+                  />
+                </Card>
+              </Col>
+            </Row>
+
+            {/* View mode switch */}
+            <div className="content-spacing">
+              <Tabs 
+                activeKey={viewMode} 
+                onChange={setViewMode}
+                items={[
+                  { key: 'calendar', label: 'Xem theo Lịch' },
+                  { key: 'list', label: 'Xem theo Danh sách' }
+                ]}
+              />
+            </div>
+
+            {viewMode === 'calendar' ? (
+              <Row gutter={mainGutter}>
+                {/* Main Calendar */}
+                <Col xs={24} lg={16}>
+                  <ScheduleCalendar 
+                    data={filteredData} 
+                    selectedDate={selectedDate}
+                    onDateSelect={setSelectedDate}
+                  />
+                </Col>
+
+                {/* Sidebar with today's and upcoming courses */}
+                <Col xs={24} lg={8}>
+                  <Space direction="vertical" style={{ width: '100%' }} size="large">
+                    {/* Today's Courses */}
+                    <Card
+                      className="glass-card"
+                      title={
+                        <Space>
+                          <FireOutlined style={{ color: '#52c41a' }} />
+                          <Title level={4} style={{ margin: 0 }}>
+                            Hôm nay ({dayjs().format('DD/MM/YYYY')})
+                          </Title>
+                        </Space>
+                      }
+                      style={{ borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                      loading={searchLoading}
+                    >
+                      {todayCourses.length > 0 ? (
+                        <Space direction="vertical" style={{ width: '100%' }} size="middle">
+                          {todayCourses.map((course, index) => (
+                            <CourseCard key={index} course={course} />
+                          ))}
+                        </Space>
+                      ) : (
+                        <EmptyState
+                          type="no-classes-today"
+                        />
+                      )}
+                    </Card>
+
+                    {/* Upcoming Courses */}
+                    <Card
+                      className="glass-card"
+                      title={
+                        <Space>
+                          <ClockCircleOutlined style={{ color: '#1890ff' }} />
+                          <Title level={4} style={{ margin: 0 }}>
+                            Sắp tới
+                          </Title>
+                        </Space>
+                      }
+                      style={{ borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                      loading={searchLoading}
+                    >
+                      {upcomingCourses.length > 0 ? (
+                        <Space direction="vertical" style={{ width: '100%' }} size="middle">
+                          {upcomingCourses.map((course, index) => (
+                            <CourseCard key={index} course={course} showDate={true} />
+                          ))}
+                        </Space>
+                      ) : (
+                        <EmptyState
+                          type="no-upcoming"
+                        />
+                      )}
+                    </Card>
+                  </Space>
+                </Col>
+              </Row>
+            ) : (
+              <Row gutter={mainGutter}>
+                <Col xs={24}>
+                  <Card 
+                    className="glass-card"
+                    title={
+                      <Space>
+                        <BookOutlined />
+                        <Title level={4} style={{ margin: 0 }}>Danh sách môn học</Title>
+                      </Space>
+                    }
+                  >
+                    {sortedCourses.length > 0 ? (
+                      <Space direction="vertical" style={{ width: '100%' }} size="middle">
+                        {sortedCourses.map((course, index) => (
+                          <CourseCard key={index} course={course} showDate />
+                        ))}
+                      </Space>
+                    ) : (
+                      <EmptyState type="no-classes" title="Không có kết quả" description="Hãy điều chỉnh bộ lọc để xem thêm môn học." />
+                    )}
+                  </Card>
+                </Col>
+              </Row>
+            )}
+          </div>
         </Content>
 
         {/* Float Buttons for additional features */}
