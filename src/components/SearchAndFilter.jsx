@@ -100,13 +100,7 @@ const SearchAndFilter = ({
   const hasFilters = selectedSubjects.length > 0 || selectedTimeRange !== 'all' || searchValue;
 
   return (
-    <div style={{ 
-      background: 'white', 
-      padding: '16px', 
-      borderRadius: '8px',
-      boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-      marginBottom: '16px'
-    }}>
+    <div className="search-filter-card" style={{ marginBottom: '16px' }}>
       <Space direction="vertical" style={{ width: '100%' }} size="middle">
         {/* Search Bar */}
         <Search
@@ -118,19 +112,19 @@ const SearchAndFilter = ({
           onChange={(e) => setSearchValue(e.target.value)}
           onSearch={handleSearch}
           loading={loading}
-          style={{ borderRadius: '6px' }}
+          style={{ borderRadius: '999px' }}
         />
 
         {/* Filter Controls */}
         <Space wrap>
           <Dropdown menu={subjectFilterMenu} trigger={['click']} placement="bottomLeft">
-            <Button icon={<BookOutlined />} style={{ borderRadius: '6px' }}>
+            <Button icon={<BookOutlined />} shape="round">
               Môn học {selectedSubjects.length > 0 && `(${selectedSubjects.length})`}
             </Button>
           </Dropdown>
 
           <Dropdown menu={timeRangeMenu} trigger={['click']} placement="bottomLeft">
-            <Button icon={<CalendarOutlined />} style={{ borderRadius: '6px' }}>
+            <Button icon={<CalendarOutlined />} shape="round">
               Thời gian
             </Button>
           </Dropdown>
@@ -140,7 +134,7 @@ const SearchAndFilter = ({
               <Button 
                 icon={<ClearOutlined />} 
                 onClick={handleClear}
-                style={{ borderRadius: '6px' }}
+                shape="round"
               >
                 Xóa bộ lọc
               </Button>
@@ -158,7 +152,7 @@ const SearchAndFilter = ({
                   color={subjectColors[subject]}
                   closable
                   onClose={() => handleSubjectToggle(subject)}
-                  style={{ fontSize: '12px' }}
+                  style={{ fontSize: '12px', borderRadius: '999px', padding: '2px 10px' }}
                 >
                   {subject}
                 </Tag>
@@ -168,7 +162,7 @@ const SearchAndFilter = ({
                   color="processing"
                   closable
                   onClose={() => handleTimeRangeChange('all')}
-                  style={{ fontSize: '12px' }}
+                  style={{ fontSize: '12px', borderRadius: '999px', padding: '2px 10px' }}
                 >
                   {timeRangeOptions.find(opt => opt.key === selectedTimeRange)?.label}
                 </Tag>
