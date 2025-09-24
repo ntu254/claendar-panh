@@ -323,6 +323,19 @@ function App() {
       </Header>
 
         <Content style={{ padding: '24px' }}>
+          {/* Hero Banner */}
+          <div className="hero-banner content-spacing">
+            <div className="hero-content">
+              <Title level={3} style={{ margin: 0 }}>
+                Chào bạn! Đây là lịch học của bạn.
+              </Title>
+              <Typography.Text style={{ display: 'block', marginTop: 6 }}>
+                Dễ nhìn, đáng yêu, và phản hồi tốt trên mọi thiết bị. Dùng bộ lọc phía dưới để tìm nhanh.
+              </Typography.Text>
+            </div>
+            <div className="hero-art" aria-hidden="true" />
+          </div>
+
           {/* Search and Filter */}
           <div className="content-spacing">
             <SearchAndFilter
@@ -337,7 +350,7 @@ function App() {
           {/* Statistics Cards */}
           <Row gutter={[16, 16]} className="content-spacing">
             <Col xs={24} sm={6}>
-              <Card hoverable>
+              <Card hoverable className="statistic-card">
                 <Statistic
                   title="Môn học"
                   value={stats.uniqueSubjects}
@@ -347,7 +360,7 @@ function App() {
               </Card>
             </Col>
             <Col xs={24} sm={6}>
-              <Card hoverable>
+              <Card hoverable className="statistic-card">
                 <Statistic
                   title="Tổng buổi học"
                   value={stats.totalClasses}
@@ -357,7 +370,7 @@ function App() {
               </Card>
             </Col>
             <Col xs={24} sm={6}>
-              <Card hoverable>
+              <Card hoverable className="statistic-card">
                 <Statistic
                   title="Hôm nay"
                   value={stats.todayClasses}
@@ -367,7 +380,7 @@ function App() {
               </Card>
             </Col>
             <Col xs={24} sm={6}>
-              <Card hoverable>
+              <Card hoverable className="statistic-card">
                 <Statistic
                   title="Tuần này"
                   value={stats.thisWeekClasses}
@@ -393,6 +406,7 @@ function App() {
               <Space direction="vertical" style={{ width: '100%' }} size="large">
                 {/* Today's Courses */}
                 <Card
+                  className="glass-card"
                   title={
                     <Space>
                       <FireOutlined style={{ color: '#52c41a' }} />
@@ -419,6 +433,7 @@ function App() {
 
                 {/* Upcoming Courses */}
                 <Card
+                  className="glass-card"
                   title={
                     <Space>
                       <ClockCircleOutlined style={{ color: '#1890ff' }} />
