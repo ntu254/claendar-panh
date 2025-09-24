@@ -145,6 +145,7 @@ body {
 .gradient-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+
 }
 
 /* Better Button Styles */
@@ -163,6 +164,48 @@ body {
   background: linear-gradient(135deg, #40a9ff 0%, #1890ff 100%);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}
+
+/* Cute, friendly search & filter card */
+.search-filter-card {
+  background: linear-gradient(135deg, #ffffff 0%, #fbfbff 100%);
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  backdrop-filter: saturate(1.1);
+  position: sticky;
+  top: 16px;
+  z-index: 2;
+  border: 1px solid #f0f0f0;
+}
+
+@media (max-width: 768px) {
+  .search-filter-card {
+    top: 8px;
+    padding: 12px;
+    border-radius: 14px;
+  }
+}
+
+/* Rounded input for cute feel */
+.search-filter-card .ant-input-group-addon,
+.search-filter-card .ant-input,
+.search-filter-card .ant-input-search-button {
+  border-radius: 999px !important;
+}
+
+/* Subtle hover on pills */
+.search-filter-card .ant-btn,
+.search-filter-card .ant-tag {
+  transition: var(--transition-base);
+}
+
+.search-filter-card .ant-btn:hover {
+  transform: translateY(-1px);
+}
+
+.search-filter-card .ant-tag:hover {
+  transform: scale(1.05);
 }
 
 /* Enhanced Responsive Design */
