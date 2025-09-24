@@ -298,11 +298,16 @@ function App() {
         zIndex: 1000,
         transition: 'all 0.3s ease'
       }}>
-        <Space align="center">
-          <CalendarOutlined style={{ fontSize: '24px', color: 'white' }} />
-          <Title level={2} style={{ color: 'white', margin: 0 }}>
-            Lịch Khóa Biểu
-          </Title>
+        <Space align="center" className="mobile-stack">
+          <CalendarOutlined style={{ fontSize: '26px', color: 'white' }} />
+          <div>
+            <Title level={2} style={{ color: 'white', margin: 0 }}>
+              Lịch Khóa Biểu
+            </Title>
+            <Typography.Text style={{ color: 'rgba(255,255,255,0.85)' }}>
+              Đẹp, dễ hiểu và phản hồi tốt trên mọi thiết bị
+            </Typography.Text>
+          </div>
         </Space>
         
         <FloatButton
@@ -313,7 +318,7 @@ function App() {
             background: 'rgba(255, 255, 255, 0.2)',
             border: '1px solid rgba(255, 255, 255, 0.3)'
           }}
-          tooltip="Theme Settings"
+          tooltip="Tùy chỉnh giao diện"
         />
       </Header>
 
@@ -470,6 +475,14 @@ function App() {
           onClose={() => setThemeSettingsOpen(false)}
         />
       </Layout>
+      <Layout.Footer style={{ 
+        textAlign: 'center', 
+        background: 'transparent', 
+        marginTop: 12,
+        color: isDarkMode ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.45)'
+      }}>
+        Mẹo nhỏ: Dùng bộ lọc để tìm nhanh môn học, hoặc mở Tùy chỉnh giao diện để chọn màu bạn thích.
+      </Layout.Footer>
   );
 }
 
