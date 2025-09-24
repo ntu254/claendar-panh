@@ -68,15 +68,17 @@ const CourseCard = ({ course, showDate = false }) => {
   return (
     <Card
       hoverable
+      className="course-card"
       style={{
-        borderRadius: '12px',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+        borderRadius: '16px',
+        boxShadow: '0 6px 20px rgba(0,0,0,0.08)',
         border: isToday ? '2px solid #52c41a' : '1px solid #f0f0f0',
-        opacity: isPast ? 0.7 : 1,
-        background: isToday ? '#f6ffed' : 'white',
+        opacity: isPast ? 0.85 : 1,
+        background: isToday ? '#f6ffed' : subjectInfo.gradient,
+        color: '#1f1f1f',
         transition: 'all 0.3s ease'
       }}
-      bodyStyle={{ padding: '16px' }}
+      bodyStyle={{ padding: '16px', background: 'rgba(255,255,255,0.85)', borderRadius: '12px' }}
     >
       {/* Header with subject and date */}
       <div style={{ marginBottom: '12px' }}>
