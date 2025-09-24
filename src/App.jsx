@@ -336,83 +336,80 @@ function App() {
       </Header>
 
         <Content style={{ padding: '24px' }}>
-          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            {/* Hero Banner */}
-            <div className="hero-banner content-spacing">
-              <div className="hero-content">
-                <Title level={3} style={{ margin: 0 }}>
-                  Chào bạn! Đây là lịch học của bạn.
-                </Title>
-                <Typography.Text style={{ display: 'block', marginTop: 6 }}>
-                  Dễ nhìn, đáng yêu, và phản hồi tốt trên mọi thiết bị. Dùng bộ lọc phía dưới để tìm nhanh.
-                </Typography.Text>
-              </div>
-              <div className="hero-art" aria-hidden="true" />
-            </div>
+          {/* Search and Filter */}
+          <div className="content-spacing">
+            <SearchAndFilter
+              onSearch={handleSearch}
+              onFilter={handleFilter}
+              onClear={handleClearFilters}
+              subjects={uniqueSubjects}
+              loading={searchLoading}
+            />
+          </div>
 
-            {/* Helpful tip */}
-            <div className="content-spacing">
-              <Alert 
-                message="Mẹo nhỏ" 
-                description="Bạn có thể chuyển chế độ xem giữa Lịch và Danh sách để thuận tiện trên điện thoại."
-                type="info" 
-                showIcon 
-                closable 
-                style={{ borderRadius: 12 }}
+          <Row gutter={[24, 24]}>
+            {/* Main Calendar */}
+            <Col xs={24} lg={16}>
+              <ScheduleCalendar 
+                data={filteredData} 
+                selectedDate={selectedDate}
+                onDateSelect={setSelectedDate}
               />
             </div>
 
-            {/* Search and Filter */}
-            <div className="content-spacing">
-              <SearchAndFilter
-                onSearch={handleSearch}
-                onFilter={handleFilter}
-                onClear={handleClearFilters}
-                subjects={uniqueSubjects}
-                loading={searchLoading}
-              />
-            </div>
+            {/* Sidebar with today's and upcoming courses */}
+            <Col xs={24} lg={8}>
+              <Space direction="vertical" style={{ width: '100%' }} size="large">
+                {/* Today's Courses */}
+                <Card
+                  title={
+                    <Space>
+                      <FireOutlined style={{ color: '#52c41a' }} />
+                      <Title level={4} style={{ margin: 0 }}>
+                        Hôm nay ({dayjs().format('DD/MM/YYYY')})
+                      </Title>
+                    </Space>
+                  }
+                  style={{ borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                  loading={searchLoading}
+                >
+                  {todayCourses.length > 0 ? (
+                    <Space direction="vertical" style={{ width: '100%' }} size="middle">
+                      {todayCourses.map((course, index) => (
+                        <CourseCard key={index} course={course} />
+                      ))}
+                    </Space>
+                  ) : (
+                    <EmptyState
+                      type="no-classes-today"
+                    />
+                  )}
+                </Card>
 
-            {/* Statistics Cards */}
-            <Row gutter={mainGutter} className="content-spacing">
-              <Col xs={24} sm={6}>
-                <Card hoverable className="statistic-card">
-                  <Statistic
-                    title="Môn học"
-                    value={stats.uniqueSubjects}
-                    prefix={<BookOutlined />}
-                    valueStyle={{ color: '#3f8600' }}
-                  />
-                </Card>
-              </Col>
-              <Col xs={24} sm={6}>
-                <Card hoverable className="statistic-card">
-                  <Statistic
-                    title="Tổng buổi học"
-                    value={stats.totalClasses}
-                    prefix={<CalendarOutlined />}
-                    valueStyle={{ color: '#1890ff' }}
-                  />
-                </Card>
-              </Col>
-              <Col xs={24} sm={6}>
-                <Card hoverable className="statistic-card">
-                  <Statistic
-                    title="Hôm nay"
-                    value={stats.todayClasses}
-                    prefix={<FireOutlined />}
-                    valueStyle={{ color: '#cf1322' }}
-                  />
-                </Card>
-              </Col>
-              <Col xs={24} sm={6}>
-                <Card hoverable className="statistic-card">
-                  <Statistic
-                    title="Tuần này"
-                    value={stats.thisWeekClasses}
-                    prefix={<ClockCircleOutlined />}
-                    valueStyle={{ color: '#722ed1' }}
-                  />
+                {/* Upcoming Courses */}
+                <Card
+                  title={
+                    <Space>
+                      <ClockCircleOutlined style={{ color: '#1890ff' }} />
+                      <Title level={4} style={{ margin: 0 }}>
+                        Sắp tới
+                      </Title>
+                    </Space>
+                  }
+                  style={{ borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                  loading={searchLoading}
+                >
+                  {upcomingCourses.length > 0 ? (
+                    <Space direction="vertical" style={{ width: '100%' }} size="middle">
+                      {upcomingCourses.map((course, index) => (
+                        <CourseCard key={index} course={course} showDate={true} />
+                      ))}
+                    </Space>
+                  ) : (
+                    <EmptyState
+                      type="no-upcoming"
+                    />
+                  )}
                 </Card>
               </Col>
             </Row>
