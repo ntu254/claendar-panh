@@ -298,10 +298,9 @@ function App() {
       minHeight: '100vh',
       transition: 'all 0.3s ease'
     }}>
-      <Header style={{ 
+      <Header className="animated-header" style={{ 
         background: isDarkMode 
-          ? 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)'
-          : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          ? 'linear-gradient(135deg, #2c3e50 0%, #34495egradient(135deg, #667eea 0%, #764ba2 100%)',
         padding: '0 24px',
         display: 'flex',
         alignItems: 'center',
