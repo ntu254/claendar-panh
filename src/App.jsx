@@ -11,7 +11,8 @@ import {
   BackTop,
   FloatButton,
   Alert,
-  Tabs
+  Tabs,
+  Button
 } from 'antd';
 import { 
   CalendarOutlined, 
@@ -297,7 +298,8 @@ function App() {
     }}>
       <Header className="animated-header" style={{ 
         background: isDarkMode 
-          ? 'linear-gradient(135deg, #2c3e50 0%, #34495egradient(135deg, #667eea 0%, #764ba2 100%)',
+          ? 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)'
+          : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         padding: '0 24px',
         display: 'flex',
         alignItems: 'center',
@@ -520,6 +522,28 @@ function App() {
             )}
           </div>
         </Content>
+
+        {/* Mobile bottom navigation */}
+        <div className="mobile-bottom-nav">
+          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+            <Button
+              type={viewMode === 'calendar' ? 'primary' : 'default'}
+              shape="round"
+              icon={<CalendarOutlined />}
+              onClick={() => setViewMode('calendar')}
+            >
+              Lịch
+            </Button>
+            <Button
+              type={viewMode === 'list' ? 'primary' : 'default'}
+              shape="round"
+              icon={<BookOutlined />}
+              onClick={() => setViewMode('list')}
+            >
+              Danh sách
+            </Button>
+          </Space>
+        </div>
 
         {/* Float Buttons for additional features */}
         <FloatButton.Group
