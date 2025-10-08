@@ -14,6 +14,14 @@ body {
   overflow-x: hidden;
 }
 
+/* Glass card for cute aesthetic */
+.glass-card {
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(10px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08) !important;
+}
+
 /* Improved Loading Animation */
 .loading-container {
   display: flex;
