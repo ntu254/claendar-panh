@@ -171,23 +171,7 @@ function App() {
     }).slice(0, 5);
   };
 
-  // Get statistics
-  const getStatistics = () => {
-    const uniqueSubjects = new Set(scheduleData.map(course => course.subject)).size;
-    const totalClasses = scheduleData.length;
-    const todayClasses = getTodayCourses().length;
-    const thisWeekClasses = scheduleData.filter(course => {
-      const courseDate = dayjs(`${course.year}-${course.month}-${course.day}`);
-      return courseDate.isSame(dayjs(), 'week');
-    }).length;
-
-    return {
-      uniqueSubjects,
-      totalClasses,
-      todayClasses,
-      thisWeekClasses
-    };
-  };
+  
 
   // Get unique subjects for filter
   const getUniqueSubjects = () => {
@@ -218,13 +202,7 @@ function App() {
         </Header>
 
         <Content style={{ padding: '24px' }}>
-          <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
-            {Array.from({ length: 4 }, (_, index) => (
-              <Col xs={24} sm={6} key={index}>
-                <SkeletonLoader type="statistic" />
-              </Col>
-            ))}
-          </Row>
+          
 
           <Row gutter={[24, 24]}>
             <Col xs={24} lg={16}>
@@ -278,7 +256,6 @@ function App() {
 
   const todayCourses = getTodayCourses();
   const upcomingCourses = getUpcomingCourses();
-  const stats = getStatistics();
   const uniqueSubjects = getUniqueSubjects();
 
   // Sorted list for "list" view
