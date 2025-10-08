@@ -5,12 +5,10 @@ import {
   Row, 
   Col, 
   Card, 
-  Statistic, 
   Space, 
   message,
   BackTop,
   FloatButton,
-  Alert,
   Tabs,
   Button
 } from 'antd';
@@ -346,74 +344,7 @@ function App() {
             />
           </div>
 
-          <Row gutter={[24, 24]}>
-            {/* Main Calendar */}
-            <Col xs={24} lg={16}>
-              <ScheduleCalendar 
-                data={filteredData} 
-                selectedDate={selectedDate}
-                onDateSelect={setSelectedDate}
-              />
-            </div>
-
-            {/* Sidebar with today's and upcoming courses */}
-            <Col xs={24} lg={8}>
-              <Space direction="vertical" style={{ width: '100%' }} size="large">
-                {/* Today's Courses */}
-                <Card
-                  title={
-                    <Space>
-                      <FireOutlined style={{ color: '#52c41a' }} />
-                      <Title level={4} style={{ margin: 0 }}>
-                        Hôm nay ({dayjs().format('DD/MM/YYYY')})
-                      </Title>
-                    </Space>
-                  }
-                  style={{ borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                  loading={searchLoading}
-                >
-                  {todayCourses.length > 0 ? (
-                    <Space direction="vertical" style={{ width: '100%' }} size="middle">
-                      {todayCourses.map((course, index) => (
-                        <CourseCard key={index} course={course} />
-                      ))}
-                    </Space>
-                  ) : (
-                    <EmptyState
-                      type="no-classes-today"
-                    />
-                  )}
-                </Card>
-
-                {/* Upcoming Courses */}
-                <Card
-                  title={
-                    <Space>
-                      <ClockCircleOutlined style={{ color: '#1890ff' }} />
-                      <Title level={4} style={{ margin: 0 }}>
-                        Sắp tới
-                      </Title>
-                    </Space>
-                  }
-                  style={{ borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                  loading={searchLoading}
-                >
-                  {upcomingCourses.length > 0 ? (
-                    <Space direction="vertical" style={{ width: '100%' }} size="middle">
-                      {upcomingCourses.map((course, index) => (
-                        <CourseCard key={index} course={course} showDate={true} />
-                      ))}
-                    </Space>
-                  ) : (
-                    <EmptyState
-                      type="no-upcoming"
-                    />
-                  )}
-                </Card>
-              </Col>
-            </Row>
-
-            {/* View mode switch */}
+          {/* View mode switch */}
             <div className="content-spacing">
               <Tabs 
                 activeKey={viewMode} 
