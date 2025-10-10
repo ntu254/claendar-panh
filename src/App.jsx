@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Layout, Typography, Row, Col, Card, Space, message,
-  BackTop, FloatButton, Alert, Tabs, Button
+  BackTop, FloatButton, Alert, Tabs, Button, Statistic
 } from 'antd';
 import { 
   CalendarOutlined, BookOutlined, ClockCircleOutlined, 
@@ -21,6 +21,131 @@ import './App.css';
 const { Header, Content } = Layout;
 const { Title } = Typography;
 dayjs.locale('vi');
+
+/* Loading layout shown while fetching data */
+const SkeletonLoaderLayout = ({ isDarkMode }) => (
+  <Layout style={{ background: isDarkMode ? '#000' : '#f5f5f5', minHeight: '100vh' }}>
+    <Content style={{ padding: '24px' }}>
+      <SkeletonLoader type="calendar" />
+      <SkeletonLoader type="statistic" count={3} />
+      <SkeletonLoader type="card" count={3} />
+    </Content>
+  </Layout>
+);
+
+/* Error layout shown when fetch fails */
+const ErrorLayout = ({ isDarkMode, error }) => (
+  <Layout style={{ background: isDarkMode ? '#000' : '#f5f5f5', minHeight: '100vh' }}>
+    <Content style={{ padding: '24px' }}>
+      <Alert 
+        message="Không thể tải dữ liệu lịch học"
+        description={String(error)}
+        type="error"
+        showIcon
+        action={
+          <Button size="small" type="primary" onClick={() => window.location.reload()}>
+            Tải lại
+          </Button>
+        }
+      />
+    </Content>
+  </Layout>
+);
+
+/* Statistics cards */
+const StatsCards = ({ stats }) => (
+  <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
+    <Col xs={24} sm={12} md={6}>
+      <Card>
+        <Statistic title="Môn học" value={stats.uniqueSubjects} />
+      </Card>
+    </Col>
+    <Col xs={24} sm={12} md={6}>
+      <Card>
+        <Statistic title="Tổng số lớp" value={stats.totalClasses} />
+      </Card>
+    </Col>
+    <Col xs={24} sm={12} md={6}>
+      <Card>
+        <Statistic title="Hôm nay" value={stats.todayClasses} />
+      </Card>
+    </Col>
+    <Col xs={24} sm={12} md={6}>
+      <Card>
+        <Statistic title="Tuần này" value={stats.thisWeekClasses} />
+      </Card>
+    </Col>
+  </Row>
+);
+
+/* Calendar view with Today and Upcoming lists */
+const CalendarView = ({
+  filteredData,
+  selectedDate,
+  onDateSelect,
+  todayCourses,
+  upcomingCourses,
+  mainGutter
+}) => (
+  <Row gutter={mainGutter}>
+    <Col xs={24} lg={16}>
+      <ScheduleCalendar 
+        data={filteredData} 
+        selectedDate={selectedDate} 
+        onDateSelect={onDateSelect} 
+      />
+    </Col>
+    <Col xs={24} lg={8}>
+      <Card 
+        title={
+          <Space>
+            <ClockCircleOutlined />
+            <span>Hôm nay</span>
+          </Space>
+        } 
+        style={{ marginBottom: 16 }}
+      >
+        {todayCourses.length > 0 ? (
+          todayCourses.map((c, idx) => <CourseCard key={idx} course={c} />)
+        ) : (
+          <EmptyState type="no-classes-today" />
+        )}
+      </Card>
+
+      <Card 
+        title={
+          <Space>
+            <FireOutlined />
+            <span>Sắp tới</span>
+          </Space>
+        }
+      >
+        {upcomingCourses.length > 0 ? (
+          upcomingCourses.map((c, idx) => <CourseCard key={idx} course={c} showDate />)
+        ) : (
+          <EmptyState type="no-upcoming" />
+        )}
+      </Card>
+    </Col>
+  </Row>
+);
+
+/* List view for all filtered courses */
+const ListView = ({ sortedCourses }) => (
+  <div>
+    {sortedCourses.length > 0 ? (
+      <Row gutter={[16, 16]}>
+        {sortedCourses.map((c, idx) => (
+          <Col xs={24} md={12} key={idx}>
+            <CourseCard course={c} showDate />
+          </Col>
+        ))}
+      </Row>
+    ) : (
+      <EmptyState type="no-search-results" />
+    )}
+  </div>
+);
 
 function App() {
   const [scheduleData, setScheduleData] = useState([]);
@@ -183,8 +308,7 @@ function App() {
             onDateSelect={setSelectedDate}
             todayCourses={todayCourses}
             upcomingCourses={upcomingCourses}
-            searchLoading={searchLoading}
-            mainGutter={mainGutter}
+            mainGutter={[24, 24]}
           />
         ) : (
           <ListView sortedCourses={sortedCourses} />
