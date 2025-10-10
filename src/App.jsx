@@ -22,6 +22,112 @@ const { Header, Content } = Layout;
 const { Title } = Typography;
 dayjs.locale('vi');
 
+// Lightweight loading and error layouts used early-return below
+const SkeletonLoaderLayout = ({ isDarkMode }) => (
+  <Layout style={{ background: isDarkMode ? '#000' : '#f5f5f5', minHeight: '100vh' }}>
+    <Content style={{ padding: '24px' }}>
+      <Space direction="vertical" style={{ width: '100%' }} size="large">
+        <SkeletonLoader type="statistic" count={1} />
+        <SkeletonLoader type="calendar" count={1} />
+        <SkeletonLoader type="card" count={3} />
+      </Space>
+    </Content>
+  </Layout>
+);
+
+const ErrorLayout = ({ isDarkMode, error }) => (
+  <Layout style={{ background: isDarkMode ? '#000' : '#f5f5f5', minHeight: '100vh' }}>
+    <Content style={{ padding: '24px' }}>
+      <Alert
+        message="Ứng dụng gặp lỗi khi tải dữ liệu"
+        description={String(error)}
+        type="error"
+        showIcon
+      />
+    </Content>
+  </Layout>
+);
+
+// Small view components referenced by App
+const StatsCards = ({ stats }) => (
+  <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
+    <Col xs={12} md={6}>
+      <Card><Space direction="vertical" size={0}>
+        <Typography.Text type="secondary">Môn học</Typography.Text>
+        <Typography.Title level={4} style={{ margin: 0 }}>{stats.uniqueSubjects}</Typography.Title>
+      </Space></Card>
+    </Col>
+    <Col xs={12} md={6}>
+      <Card><Space direction="vertical" size={0}>
+        <Typography.Text type="secondary">Tổng số tiết</Typography.Text>
+        <Typography.Title level={4} style={{ margin: 0 }}>{stats.totalClasses}</Typography.Title>
+      </Space></Card>
+    </Col>
+    <Col xs={12} md={6}>
+      <Card><Space direction="vertical" size={0}>
+        <Typography.Text type="secondary">Hôm nay</Typography.Text>
+        <Typography.Title level={4} style={{ margin: 0 }}>{stats.todayClasses}</Typography.Title>
+      </Space></Card>
+    </Col>
+    <Col xs={12} md={6}>
+      <Card><Space direction="vertical" size={0}>
+        <Typography.Text type="secondary">Tuần này</Typography.Text>
+        <Typography.Title level={4} style={{ margin: 0 }}>{stats.thisWeekClasses}</Typography.Title>
+      </Space></Card>
+    </Col>
+  </Row>
+);
+
+const CalendarView = ({
+  filteredData,
+  selectedDate,
+  onDateSelect,
+  todayCourses,
+  upcomingCourses,
+  searchLoading,
+  mainGutter
+}) => (
+  <Row gutter={mainGutter}>
+    <Col xs={24} lg={16}>
+      {searchLoading ? (
+        <SkeletonLoader type="calendar" count={1} />
+      ) : (
+        <ScheduleCalendar data={filteredData} selectedDate={selectedDate} onDateSelect={onDateSelect} />
+      )}
+    </Col>
+    <Col xs={24} lg={8}>
+      <Card title="Hôm nay" style={{ marginBottom: 16 }}>
+        {todayCourses.length ? (
+          <Space direction="vertical" style={{ width: '100%' }}>
+            {todayCourses.map((c, idx) => <CourseCard key={idx} course={c} showDate={false} />)}
+          </Space>
+        ) : (
+          <EmptyState type="no-classes" title="Không có lịch học" description="Hôm nay bạn không có tiết học nào" />
+        )}
+      </Card>
+      <Card title="Sắp tới">
+        {upcomingCourses.length ? (
+          <Space direction="vertical" style={{ width: '100%' }}>
+            {upcomingCourses.map((c, idx) => <CourseCard key={idx} course={c} showDate />)}
+          </Space>
+        ) : (
+          <EmptyState type="no-classes" title="Không có lịch sắp tới" description="Không có tiết học trong 7 ngày tới" />
+        )}
+      </Card>
+    </Col>
+  </Row>
+);
+
+const ListView = ({ sortedCourses }) => (
+  <Row gutter={[16, 16]}>
+    {sortedCourses.map((course, idx) => (
+      <Col key={idx} xs={24} md={12} lg={8}>
+        <CourseCard course={course} showDate />
+      </Col>
+    ))}
+  </Row>
+);
+
 function App() {
   const [scheduleData, setScheduleData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
