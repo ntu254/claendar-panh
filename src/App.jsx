@@ -22,6 +22,172 @@ const { Header, Content } = Layout;
 const { Title } = Typography;
 dayjs.locale('vi');
 
+// Fallback layouts and views that were referenced but not defined
+const SkeletonLoaderLayout = ({ isDarkMode }) => (
+  <Layout style={{ background: isDarkMode ? '#000' : '#f5f5f5', minHeight: '100vh' }}>
+    <Header className="animated-header" style={{
+      background: isDarkMode
+        ? 'linear-gradient(135deg,#2c3e50,#34495e)'
+        : 'linear-gradient(135deg,#667eea,#764ba2)',
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 24px'
+    }}>
+      <Space align="center" className="mobile-stack">
+        <CalendarOutlined style={{ fontSize: 26, color: 'white' }} />
+        <div>
+          <Title level={2} style={{ color: 'white', margin: 0 }}>Lịch Khóa Biểu</Title>
+          <Typography.Text style={{ color: 'rgba(255,255,255,0.85)' }}>
+            Đang tải dữ liệu...
+          </Typography.Text>
+        </div>
+      </Space>
+    </Header>
+    <Content style={{ padding: '24px' }}>
+      <Space direction="vertical" style={{ width: '100%' }}>
+        <SkeletonLoader type="statistic" count={3} />
+        <SkeletonLoader type="calendar" count={1} />
+        <SkeletonLoader type="card" count={3} />
+      </Space>
+    </Content>
+  </Layout>
+);
+
+const ErrorLayout = ({ isDarkMode, error }) => (
+  <Layout style={{ background: isDarkMode ? '#000' : '#f5f5f5', minHeight: '100vh' }}>
+    <Header className="animated-header" style={{
+      background: isDarkMode
+        ? 'linear-gradient(135deg,#2c3e50,#34495e)'
+        : 'linear-gradient(135deg,#667eea,#764ba2)',
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 24px'
+    }}>
+      <Space align="center" className="mobile-stack">
+        <CalendarOutlined style={{ fontSize: 26, color: 'white' }} />
+        <div>
+          <Title level={2} style={{ color: 'white', margin: 0 }}>Lịch Khóa Biểu</Title>
+          <Typography.Text style={{ color: 'rgba(255,255,255,0.85)' }}>
+            Có lỗi xảy ra khi tải dữ liệu
+          </Typography.Text>
+        </div>
+      </Space>
+    </Header>
+    <Content style={{ padding: '24px' }}>
+      <Alert
+        message="Không thể tải dữ liệu lịch học"
+        description={String(error)}
+        type="error"
+        showIcon
+      />
+    </Content>
+  </Layout>
+);
+
+// Stats cards
+const StatsCards = ({ stats }) => (
+  <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
+    <Col xs={24} sm={12} md={6}>
+      <Card>
+        <Space>
+          <BookOutlined style={{ color: '#722ed1' }} />
+          <Typography.Text strong>Môn học</Typography.Text>
+        </Space>
+        <Title level={3} style={{ marginTop: 8 }}>{stats.uniqueSubjects}</Title>
+      </Card>
+    </Col>
+    <Col xs={24} sm={12} md={6}>
+      <Card>
+        <Space>
+          <CalendarOutlined style={{ color: '#1890ff' }} />
+          <Typography.Text strong>Tổng buổi</Typography.Text>
+        </Space>
+        <Title level={3} style={{ marginTop: 8 }}>{stats.totalClasses}</Title>
+      </Card>
+    </Col>
+    <Col xs={24} sm={12} md={6}>
+      <Card>
+        <Space>
+          <FireOutlined style={{ color: '#52c41a' }} />
+          <Typography.Text strong>Hôm nay</Typography.Text>
+        </Space>
+        <Title level={3} style={{ marginTop: 8 }}>{stats.todayClasses}</Title>
+      </Card>
+    </Col>
+    <Col xs={24} sm={12} md={6}>
+      <Card>
+        <Space>
+          <ClockCircleOutlined style={{ color: '#fa8c16' }} />
+          <Typography.Text strong>Tuần này</Typography.Text>
+        </Space>
+        <Title level={3} style={{ marginTop: 8 }}>{stats.thisWeekClasses}</Title>
+      </Card>
+    </Col>
+  </Row>
+);
+
+// Calendar view layout
+const CalendarView = ({
+  filteredData,
+  selectedDate,
+  onDateSelect,
+  todayCourses,
+  upcomingCourses,
+  searchLoading,
+  mainGutter
+}) => (
+  <Row gutter={mainGutter}>
+    <Col xs={24} lg={16}>
+      {searchLoading ? (
+        <SkeletonLoader type="calendar" count={1} />
+      ) : (
+        <ScheduleCalendar
+          data={filteredData}
+          selectedDate={selectedDate}
+          onDateSelect={onDateSelect}
+        />
+      )}
+    </Col>
+    <Col xs={24} lg={8}>
+      <Card title="Hôm nay">
+        {searchLoading ? (
+          <SkeletonLoader type="card" count={2} />
+        ) : todayCourses.length > 0 ? (
+          <Space direction="vertical" style={{ width: '100%' }}>
+            {todayCourses.map((c, idx) => <CourseCard key={idx} course={c} />)}
+          </Space>
+        ) : (
+          <EmptyState type="no-classes-today" />
+        )}
+      </Card>
+      <Card title="Sắp tới" style={{ marginTop: 16 }}>
+        {searchLoading ? (
+          <SkeletonLoader type="card" count={2} />
+        ) : upcomingCourses.length > 0 ? (
+          <Space direction="vertical" style={{ width: '100%' }}>
+            {upcomingCourses.map((c, idx) => <CourseCard key={idx} course={c} showDate />)}
+          </Space>
+        ) : (
+          <EmptyState type="no-upcoming" />
+        )}
+      </Card>
+    </Col>
+  </Row>
+);
+
+// List view
+const ListView = ({ sortedCourses }) => (
+  <div>
+    {sortedCourses.length > 0 ? (
+      <Row gutter={[16, 16]}>
+        {sortedCourses.map((c, idx) => (
+          <Col xs={24} md={12} key={idx}>
+            <CourseCard course={c} showDate />
+          </Col>
+        ))}
+      </Row>
+    ) : (
+      <EmptyState type="no-search-results" />
+    )}
+  </div>
+);
+
 function App() {
   const [scheduleData, setScheduleData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
